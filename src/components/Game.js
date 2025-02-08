@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Board from "./Board";
+import History from "./History";
 
 function Game() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
   const [winner, setWinner] = useState(null);
+  const [history, setHistory] = useState([])
+  const [currentMove, setCurrentMove] = useState(0)
 
   //Declaring a Winner
   useEffect(() => {
@@ -42,6 +45,7 @@ function Game() {
 
   //Handle player
   const handleClick = (i) => {
+
     const newSquares = [...squares];
     // is any winner? || is it unvalid squares?
     if (winner || newSquares[i]){
@@ -49,10 +53,18 @@ function Game() {
     }
     // if no, assign value for square
     newSquares[i] = xIsNext? "X" : "O";
+    const newHistory = [...history, newSquares];
     setSquares(newSquares);
     setXIsNext(!xIsNext);
+    setHistory(newHistory);
+    setCurrentMove(currentMove + 1);
   };
 
+  const jump = (move) => {
+    setHistory(history.slice(0,move));
+    setSquares(history[move]);
+    
+  }
   //Restart game
   const handlRestart = () => {
     // "Your code here";
@@ -66,6 +78,7 @@ function Game() {
       <div className="game">
         <span className="player">Next player is: {xIsNext ? "X" : "O"}</span>
         <Board squares={squares} handleClick={handleClick} />
+        <History history={history} jump={jump} />
       </div>
       <button onClick={handlRestart} className="restart-btn">
         Restart
