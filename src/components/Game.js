@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Board from "./Board";
 import History from "./History";
+import { use } from "react";
 
 function Game() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
   const [winner, setWinner] = useState(null);
-  const [history, setHistory] = useState([])
-  const [currentMove, setCurrentMove] = useState(0)
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
 
   //Declaring a Winner
   useEffect(() => {
     // "Your code here";
     const newWinner = calculateWinner(squares)
     setWinner(newWinner);
-  }, [squares]);
+  }, [squares]);  
 
+  useEffect(()=>{
+    setSquares(history[currentMove]);
+    setXIsNext(currentMove % 2 !== 0);
+  },[history, currentMove])  
   //function to check if a player has won.
   //If a player has won, we can display text such as “Winner: X” or “Winner: O”.
   //Input: squares: given an array of 9 squares:'X', 'O', or null.
@@ -53,23 +58,25 @@ function Game() {
     }
     // if no, assign value for square
     newSquares[i] = xIsNext? "X" : "O";
-    const newHistory = [...history, newSquares];
-    setSquares(newSquares);
-    setXIsNext(!xIsNext);
+    const newHistory = [...history.slice(0,currentMove+1), newSquares];
     setHistory(newHistory);
     setCurrentMove(currentMove + 1);
+        // setSquares(Array(9).fill(null));
+    // setXIsNext(true);
   };
 
   const jump = (move) => {
-    setHistory(history.slice(0,move));
-    setSquares(history[move]);
-    
+    //setSquares(newSquares);
+    //setXIsNext(!xIsNext);
+    setCurrentMove(move);
   }
   //Restart game
   const handlRestart = () => {
     // "Your code here";
-    setSquares(Array(9).fill(null));
-    setXIsNext(true);
+    // setSquares(Array(9).fill(null));
+    // setXIsNext(true);
+    setHistory([Array(9).fill(null)]);
+    setCurrentMove(0);
   };
 
   return (
