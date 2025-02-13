@@ -84,8 +84,10 @@ function Game() {
       <h2 className="result">Winner is: {winner ? winner : "N/N"}</h2>
       <div className="game">
         <span className="player">Next player is: {xIsNext ? "X" : "O"}</span>
+        <div className="metquadi">
         <Board squares={squares} handleClick={handleClick} />
         <History history={history} jump={jump} />
+        </div>
       </div>
       <button onClick={handlRestart} className="restart-btn">
         Restart
